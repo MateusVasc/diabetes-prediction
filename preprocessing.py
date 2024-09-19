@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+from category_encoders import TargetEncoder
 
 class Preprocessing:
     def __init__(self, df):
@@ -11,7 +12,7 @@ class Preprocessing:
         self.df.drop(columns=race_columns, inplace=True)
         return self.df
     
-    def encode_features(self, columns):
+    def one_hot_encode_features(self, columns):
         ohe = OneHotEncoder(sparse_output=False)
 
         for col in columns:
@@ -28,4 +29,15 @@ class Preprocessing:
             else:
                 print(f"Coluna {col} não encontrada no DataFrame.")
 
+        return self.df
+
+    def target_encode_features(self, feature_cols, target_col):
+        te = TargetEncoder()
+        
+        for col in feature_cols:
+            if col in self.df.columns:
+                self.df[col] = te.fit_transform(self.df[col], self.df[target_col])
+            else:
+                print(f"Coluna {col} não encontrada no DataFrame.")
+        
         return self.df
