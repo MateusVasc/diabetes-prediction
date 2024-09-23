@@ -1,18 +1,19 @@
+from typing import List
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from category_encoders import TargetEncoder
 
 class Preprocessing:
-    def __init__(self, df):
+    def __init__(self, df: pd.DataFrame) -> None:
         self.df = df
 
-    def combine_race_columns(self, prefix="race:"):
-        race_columns = [col for col in self.df.columns if col.startswith(prefix)]
-        self.df['race'] = self.df[race_columns].idxmax(axis=1).apply(lambda x: x.split(':')[1])
-        self.df.drop(columns=race_columns, inplace=True)
-        return self.df
+    # def combine_race_columns(self, prefix: str = "race:") -> pd.DataFrame:
+    #     race_columns = [col for col in self.df.columns if col.startswith(prefix)]
+    #     self.df['race'] = self.df[race_columns].idxmax(axis=1).apply(lambda x: x.split(':')[1])
+    #     self.df.drop(columns=race_columns, inplace=True)
+    #     return self.df
     
-    def one_hot_encode_features(self, columns):
+    def one_hot_encode_features(self, columns: List[str]) -> pd.DataFrame:
         ohe = OneHotEncoder(sparse_output=False)
 
         for col in columns:
@@ -31,7 +32,7 @@ class Preprocessing:
 
         return self.df
 
-    def target_encode_features(self, feature_cols, target_col):
+    def target_encode_features(self, feature_cols: List[str], target_col: str) -> pd.DataFrame:
         te = TargetEncoder()
         
         for col in feature_cols:
